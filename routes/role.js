@@ -24,9 +24,32 @@ router.post('/v1/role', async (req, res) => {
 
 router.get('/v1/role', async (req, res) => {
     try {
-        const role = await Role.find();
-        if(role){
-            res.status(200).send(role)
+        const data2 = await Role.find();
+        if(data2){
+            const page = 1;
+                const perPage = 10;
+                const total = data2.length;
+                const totalPages = Math.ceil(total / perPage)
+                if (page < 1 || page > totalPages) {
+                    console.log("Invalid page number");
+                } else {
+                    const startIdx = (page - 1) * perPage;
+                    const endIdx = startIdx + perPage;
+                    const pageData = data2.slice(startIdx, endIdx);
+
+                    const response = {
+                        status: true,
+                        content: {
+                            meta: {
+                                total,
+                                pages: totalPages,
+                                page,
+                            },
+                            data: pageData,
+                        },
+                    };
+                    res.status(200).send(response)
+                }
         }
         else{
             res.status(500).send("Unable to get role")

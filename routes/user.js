@@ -45,9 +45,8 @@ router.post('/v1/auth/signin', async (req, res) => {
             }
         }
         const userToken = jwt.sign(data, jwt_secret);
-        console.log(userToken);
         res.cookie('token', userToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
-        res.status(200).send(` User loggedin`)
+        res.status(200).send(user)
 
     }
 
